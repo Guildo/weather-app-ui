@@ -34,11 +34,13 @@ function fetchWeatherData(location) {
     // Buscar dados meteorológicos da API
     fetch(apiUrl).then(response => response.json()).then(data => {
         // Atualizar informações de hoje
-        const todayWeather = data.list[0].weather[0].description;
+        const todayWeather = getText(data.list[0].weather[0].description).toUpperCase();
         const todayTemperature = `${Math.round(data.list[0].main.temp)}°C`;
         const todayWeatherIconCode = data.list[0].weather[0].icon;
 
-        todayInfo.querySelector('h2').textContent = new Date().toLocaleDateString('pt-br', { weekday: 'long' });
+        console.log(data.list[0]);
+
+        todayInfo.querySelector('h2').textContent = new Date().toLocaleDateString('pt-br', { weekday: 'long' }).toUpperCase();
         todayInfo.querySelector('span').textContent = new Date().toLocaleDateString('pt-br', { day: 'numeric', month: 'long', year: 'numeric' });
         todayWeatherIcon.className = `bx bx-${weatherIconMap[todayWeatherIconCode]}`;
         todayTemp.textContent = todayTemperature;
@@ -59,15 +61,15 @@ function fetchWeatherData(location) {
         dayInfoContainer.innerHTML = `
 
             <div>
-                <span class="title">PRECIPITATION</span>
+                <span class="title">PRECIPITAÇÃO</span>
                 <span class="value">${todayPrecipitation}</span>
             </div>
             <div>
-                <span class="title">HUMIDITY</span>
+                <span class="title">HUMIDADE</span>
                 <span class="value">${todayHumidity}</span>
             </div>
             <div>
-                <span class="title">WIND SPEED</span>
+                <span class="title">VENTO</span>
                 <span class="value">${todayWindSpeed}</span>
             </div>
         
@@ -76,7 +78,7 @@ function fetchWeatherData(location) {
         // Atualiza o clima dos próximos 4 dias
         const today = new Date();
         const nextDaysData = data.list.slice(1);
-        console.log(nextDaysData);
+        //console.log(nextDaysData);
 
         const uniqueDays = new Set();
         let count = 0;
@@ -118,8 +120,71 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 locButton.addEventListener('click', () => {
-    const location = prompt('Enter a location: ');
+    const location = prompt('Insira um local: ');
     if (!location) return;
 
     fetchWeatherData(location);
 });
+
+var LOCALE = {
+    "clear sky": "Céu limpo",
+    "few clouds": "Poucas nuvens",
+    "scattered clouds": "Nuvens dispersas",
+    "broken clouds": "Nuvens quebradas",
+    "overcast clouds": "Nublado",
+    "shower rain": "Chuva de banho",
+    "rain": "Chuva",
+    "thunderstorm": "Tempestade de raios",
+    "snow": "Neve",
+    "mist": "Névoa",
+    "thunderstorm with light rain": "Tempestade de raios com chuva leve",
+    "thunderstorm with rain": "Tempestade de raios com chuva",
+    "thunderstorm with heavy rain": "Tempestade de raios com chuva pesada",
+    "light thunderstorm": "Tempestade de raios leve",
+    "heavy thunderstorm": "Tempestade de raios pesada",
+    "ragged thunderstorm": "Tempestade de raios irregular",
+    "thunderstorm with light drizzle": "Tempestade de raios com garoa leve",
+    "thunderstorm with drizzle": "Tempestade de raios com garoa",
+    "thunderstorm with heavy drizzle": "Tempestade de raios com garoa pesada",
+    "light intensity drizzle": "Garoa leve",
+    "drizzle": "Garoa",
+    "heavy intensity drizzle": "Garoa pesada",
+    "light intensity drizzle rain": "Chuva leve",
+    "drizzle rain": "Chuvisco",
+    "heavy intensity drizzle rain": "Chuva forte",
+    "shower rain and drizzle": "Chuva e garoa",
+    "heavy shower rain and drizzle": "Chuva forte e garoa",
+    "shower drizzle": "Garoa",
+    "light rain": "Chuva leve",
+    "moderate rain": "Chuva moderada",
+    "heavy intensity rain": "Chuva pesada",
+    "very heavy rain": "Chuva muito pesada",
+    "extreme rain": "Chuva extrema",
+    "freezing rain": "Chuva congelante",
+    "light intensity shower rain": "Chuva leve",
+    "heavy intensity shower rain": "Chuva forte",
+    "ragged shower rain": "Chuva irregular",
+    "light snow": "Pouca neve",
+    "heavy snow": "Neve pesada",
+    "sleet": "Granizo",
+    "light shower sleet": "Chuva de granizo leve",
+    "shower sleet": "Chuva de granizo",
+    "light rain and snow": "Chuva leve e neve",
+    "rain and snow": "Chuva e neve",
+    "light shower snow": "Chuva de neve leve",
+    "shower snow": "Chuva de neve",
+    "heavy shower snow": "Chuva de neve pesada",
+    "smoke": "Fumaça",
+    "haze": "Neblina",
+    "sand/dust whirls": "Redemoinhos de areia/poeira",
+    "fog": "Névoa",
+    "sand": "Areia",
+    "dust": "Poeira",
+    "volcanic ash": "Cinza Vuncanica",
+    "squalls": "Borrasca",
+    "tornado": "Tornado"
+};
+
+function getText(string) {
+    return LOCALE[string] ? LOCALE[string] : string;
+}
